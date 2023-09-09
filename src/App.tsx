@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import './index.css'
 
 import Counter from './Components/Counter'
@@ -7,12 +7,11 @@ import AddNew from './Components/AddNew'
 interface Count {
   id: String,
   name: String,
-  value: Number
+  value: number
 }
 
 const App: React.FC = () => {
 
-  const counter = useRef<HTMLInputElement>(null)
   const[counters, setCounters] = useState<Count[]>([])
 
   const newCounter = () => {
@@ -26,23 +25,37 @@ const App: React.FC = () => {
     setCounters(updatedCounters)
   }
 
-  // const incrementHandler = () => {
-  //   if(counter.current?.value){
-  //     const updatedValue = value + parseInt(counter.current?.value)
-  //     setValue(updatedValue)
-  //   }
-  // }
+  const incrementHandler = (id: String, val: number) => {
+    const incrementedCounters = counters.map(counter => {
+      if(counter.id === id){
+        return {...counter, value: +counter.value + +val}
+      }
 
-  // const decrementHandler = () => {
-  //   if(counter.current?.value){
-  //     const updatedValue = value - parseInt(counter.current?.value)
-  //     setValue(updatedValue)
-  //   }
-  // }
+      return counter
+    })
+    setCounters(incrementedCounters)  
+  }
 
-  // const resetHandler = () => {
-  //   setValue(0)
-  // }
+  const decrementHandler = (id: String, val: number) => {
+    const decrementedCounters = counters.map(counter => {
+      if(counter.id === id){
+        return {...counter, value: counter.value - val}
+      }
+
+      return counter
+    })
+    setCounters(decrementedCounters)
+  }
+
+  const resetHandler = (id: String) => {
+    const resetCounters = counters.map(counter => {
+      if(counter.id === id){
+        return {...counter, value: 0}
+      }
+      return counter
+    })
+    setCounters(resetCounters)
+  }
 
   console.log(counters)
 
@@ -56,6 +69,9 @@ const App: React.FC = () => {
               id={each.id}
               name={each.name} 
               value={each.value} 
+              incrementHandler={incrementHandler}
+              decrementHandler={decrementHandler}
+              resetHandler={resetHandler}
               deleteCounter={deleteCounter}
             />
           ))}

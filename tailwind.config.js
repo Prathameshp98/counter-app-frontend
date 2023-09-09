@@ -5,6 +5,9 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    height: {
+      'container' : '350px'
+    },
     borderWidth : {
       '1': '1px',
     },
