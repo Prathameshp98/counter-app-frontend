@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './index.css'
+
+import { fetchCounters } from './api/getCounters';
+import { saveCounters } from './api/saveCounters';
 
 import Counter from './Components/Counter'
 import AddNew from './Components/AddNew'
@@ -13,6 +16,27 @@ interface Count {
 const App: React.FC = () => {
 
   const[counters, setCounters] = useState<Count[]>([])
+
+  useEffect(() => {
+
+    (async() => {
+      const data = await fetchCounters()
+      let requiredData = data.data.map((each: any) => {
+        return {id: each.counterId, name: each.name, value: each.value}
+      })
+      setCounters(requiredData)
+    })()
+
+  }, [])
+
+  useEffect(() => {
+    const timer = setTimeout(async() => {
+      console.log("API called")
+      await saveCounters(counters)
+    }, 2000)
+
+    return () => clearTimeout(timer)
+  }, [counters])
 
   const newCounter = () => {
     setCounters(prev => {
